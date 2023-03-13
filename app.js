@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
+const ErrorNotExisted = require('./errors/NotFoundError');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -18,6 +19,10 @@ app.use((req, res, next) => {
 
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
+
+app.all('*', (req, res) => {
+  res.status(404).send({ message: `Ссылка 'http://localhost:3000${req.url}' отсутствует, или удалена` });
+});
 
 mongoose.set('strictQuery', true);
 mongoose.connect('mongodb://localhost:27017/mestodb');
