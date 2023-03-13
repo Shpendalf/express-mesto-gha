@@ -12,7 +12,7 @@ module.exports.getUserById = (req, res) => {
       if (!user) {
         return res.status(404).send({ message: 'Запрашиваемый пользователь не найден' });
       }
-      return res.status(201).send(user);
+      return res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -20,20 +20,17 @@ module.exports.getUserById = (req, res) => {
       }
       return res.status(500).send({ message: 'Неизвестная ошибка' });
     })
-    .finally(console.log(res));
+
 };
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   Users.create({ name, about, avatar })
-    .then((user) => { res.status(200).send(user); })
+    .then((user) => { res.status(201).send(user); })
     .catch((error) => {
       console.log(res);
       if (error.name === 'ValidationError') {
         return res.status(400).send({ message: 'Переданы не верные пользовательские данные' });
-      }
-      if (error.message === 'NotFound') {
-        return res.status(404).send({ message: 'Запрашиваемый пользователь не найден' });
       }
       return res.status(500).send({ message: 'Неизвестная ошибка' });
     });
@@ -42,15 +39,18 @@ module.exports.createUser = (req, res) => {
 module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
 
-  Users.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+  Users.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
 
     .orFail(new Error('InvalidId'))
     .then((user) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.message === 'InvalidId') {
+      if (err.message === 'ValidationError'){
         return res.status(400).send({ message: 'Переданы некорректные данные профиля' });
+      }
+      if (err.message === 'InvalidId') {
+        return res.status(404).send({ message: 'Запрашиваемый пользователь не найден' });
       }
       return res.status(500).send({ message: 'Произошла ошибка!' });
     });
