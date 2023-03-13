@@ -7,7 +7,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://localhost:27017/mestodb');
+
 
 
 app.use((req, res, next) => {
@@ -20,6 +20,9 @@ app.use((req, res, next) => {
 
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
+
+mongoose.set('strictQuery', true);
+mongoose.connect('mongodb://localhost:27017/mestodb');
 app.listen(PORT, () => {
 
   console.log(`App listening on port ${PORT}`)
