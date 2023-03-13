@@ -59,7 +59,7 @@ module.exports.updateAvatar = (req, res) => {
   const owner = req.user._id;
   const { avatar } = req.body;
 
-  Users.findByIdAndUpdate(owner, { avatar }, { new: true, runValidators: true  })
+  Users.findByIdAndUpdate(owner, { avatar }, { new: true, runValidators: true })
     .orFail(new Error('InvalidLink'))
     .then((user) => {
       res.status(200).send(user);
