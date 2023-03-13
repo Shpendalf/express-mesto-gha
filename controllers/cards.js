@@ -1,12 +1,7 @@
 const Cards = require('../models/card');
 
 exports.getCards = (req, res) => {
-  Cards.find({}).then((card) => {
-    if (card) {
-      return res.status(200).send({ data: card });
-    }
-    return res.status(400).send({ message: 'Карточка не найдена' });
-  })
+  Cards.find({}).then((card) => res.status(200).send({ data: card }))
     .catch(() => res.status(500).send({ message: 'Неизвестная ошибка ' }));
 };
 
@@ -15,7 +10,7 @@ exports.createCard = (req, res) => {
   const { name, link } = req.body;
   Cards.create({ name, link, owner })
     .then((card) => {
-      Cards.find({}).populate(['owner', 'likes']).res.status(200).send(card);
+      res.status(200).send(card);
     })
     .catch((error) => {
       if (error.name === 'ValidationError') {
@@ -26,7 +21,7 @@ exports.createCard = (req, res) => {
     });
 };
 exports.deleteCard = (req, res) => {
-  Cards.deleteMany({}).orFail(new Error('InvalidId'))
+  Cards.findByIdAndRemove(req.params.cardId).orFail(new Error('InvalidId'))
     .then((card) => {
       res.status(201).send(card);
     }).catch((error) => {
@@ -45,7 +40,7 @@ exports.likeCard = (req, res) => {
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
-  )
+  ).orFail(new Error('IncorrectID'))
     .then((card) => {
       res.status(201).send({ data: card });
     })
