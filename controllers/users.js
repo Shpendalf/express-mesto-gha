@@ -19,8 +19,7 @@ module.exports.getUserById = (req, res) => {
         return res.status(400).send({ message: 'Переданы не верные пользовательские данные' });
       }
       return res.status(500).send({ message: 'Неизвестная ошибка' });
-    })
-
+    });
 };
 
 module.exports.createUser = (req, res) => {
@@ -46,7 +45,7 @@ module.exports.updateProfile = (req, res) => {
       res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.message === 'ValidationError'){
+      if (err.message === 'ValidationError') {
         return res.status(400).send({ message: 'Переданы некорректные данные профиля' });
       }
       if (err.message === 'InvalidId') {
