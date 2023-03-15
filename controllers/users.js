@@ -14,7 +14,7 @@ module.exports.getUserById = (req, res) => {
   Users.findById(req.params.userId)
     .then((user) => {
       if (!user) throw new ErrorIsntFound();
-      else return res.status(200).send(user);
+      else return res.send(user);
     })
     .catch((error) => {
       ErrorHandler(error, res, {
@@ -26,7 +26,7 @@ module.exports.getUserById = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   Users.create({ name, about, avatar })
-    .then((user) => { res.status(201).send(user); })
+    .then((user) => { res.send(user); })
     .catch((error) => {
       ErrorHandler(error, res, {
         valMessage: 'Передан неверный формат ID',
@@ -43,7 +43,7 @@ module.exports.updateProfile = (req, res) => {
     .then((user) => {
       if (!name || !about) throw new ValidationError();
       else if (!user) throw new ErrorIsntFound();
-      else res.status(200).send(user);
+      else res.send(user);
     })
     .catch((err) => {
       ErrorHandler(err, res, {
@@ -61,7 +61,7 @@ module.exports.updateAvatar = (req, res) => {
     .then((user) => {
       if (!avatar) throw new ValidationError();
       else if (!user) throw new ErrorIsntFound();
-      else res.status(200).send(user);
+      else res.send(user);
     })
     .catch((err) => {
       ErrorHandler(err, res, {
