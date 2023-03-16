@@ -16,7 +16,7 @@ module.exports.getUsers = (req, res) => {
 module.exports.getUserById = (req, res) => {
   Users.findById(req.params.userId)
     .then((user) => {
-      if (!user) throw new ErrorIsntFound();
+      if (user === null) throw new ErrorIsntFound();
       else res.send(user);
     })
     .catch((error) => {
