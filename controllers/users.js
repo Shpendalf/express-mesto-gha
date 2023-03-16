@@ -74,7 +74,7 @@ module.exports.updateAvatar = (req, res) => {
   Users.findByIdAndUpdate(owner, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!avatar) throw new ValidationError();
-      else if (!user) throw new NotFoundError();
+      else if (!user) throw new ErrorIsntFound();
       else res.send(user);
     })
     .catch((error) => {
