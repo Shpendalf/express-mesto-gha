@@ -1,8 +1,12 @@
 const Cards = require('../models/card');
+const ErrorIsntFound = require('../errors/ErrorIsntFound');
+const { ErrorHandler } = require('../middlewares/ErrorHandler');
 
 exports.getCards = (req, res) => {
-  Cards.find({}).then((card) => res.status(200).send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'Неизвестная ошибка ' }));
+  Cards.find({}).then((card) => res.send(card))
+    .catch((error) => {
+      ErrorHandler(error, res);
+    });
 };
 
 exports.createCard = (req, res) => {
@@ -10,28 +14,32 @@ exports.createCard = (req, res) => {
   const { name, link } = req.body;
   Cards.create({ name, link, owner })
     .then((card) => {
-      res.status(200).send(card);
+      res.send(card);
     })
     .catch((error) => {
-      if (error.name === 'ValidationError') {
-        res.status(400).send({ message: 'Отправлены некорректные данные' });
-      } else {
-        res.status(500).send({ message: 'Неизвестная ошибка' });
-      }
+      ErrorHandler(
+        error,
+        res,
+        {
+          valMsg: 'Переданы неверные данные карточки',
+        },
+      );
     });
 };
 exports.deleteCard = (req, res) => {
-  Cards.findByIdAndRemove(req.params.cardId).orFail(new Error('InvalidId'))
+  Cards.findByIdAndRemove(req.params.cardId)
     .then((card) => {
-      res.status(201).send(card);
+      if (!card) throw new ErrorIsntFound();
+      else res.send(card);
     }).catch((error) => {
-      if (error.message === 'InvalidId') {
-        return res.status(404).send(({ message: 'Id карточки не найден' }));
-      }
-      if (error.name === 'CastError') {
-        return res.status(400).send({ message: 'Ошибка 400' });
-      }
-      return res.status(500).send({ message: 'Неизвестная ошибка' });
+      ErrorHandler(
+        error,
+        res,
+        {
+          foundMsg: 'Rарточка не найдена',
+          valMsg: 'Переданы неверные данные карточки',
+        },
+      );
     });
 };
 
@@ -40,18 +48,20 @@ exports.likeCard = (req, res) => {
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
-  ).orFail(new Error('IncorrectID'))
+  )
     .then((card) => {
-      res.status(201).send({ data: card });
+      if (!card) throw new ErrorIsntFound();
+      else res.send(card);
     })
-    .catch((error) => {
-      if (error.name === 'CastError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные' });
-      }
-      if (error.message === 'IncorrectID') {
-        return res.status(404).send({ message: 'Id карточки не найден' });
-      }
-      return res.status(500).send({ message: 'Неизвестная ошибка' });
+    .catch((err) => {
+      ErrorHandler(
+        error,
+        res,
+        {
+          foundMsg: 'Rарточка не найдена',
+          valMsg: 'Переданы неверные данные карточки',
+        },
+      );
     });
 };
 
@@ -61,17 +71,18 @@ exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(new Error('IncorrectID'))
     .then((card) => {
-      res.status(200).send({ data: card });
+      if (!card) throw new ErrorIsntFound();
+      else res.send(card);
     })
-    .catch((error) => {
-      if (error.name === 'CastError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные' });
-      }
-      if (error.message === 'IncorrectID') {
-        return res.status(404).send({ message: `Id карточки '${req.params}' не найден!` });
-      }
-      return res.status(500).send({ message: 'Неизвестная ошибка' });
+    .catch((err) => {
+      ErrorHandler(
+        error,
+        res,
+        {
+          foundMsg: 'Rарточка не найдена',
+          valMsg: 'Переданы неверные данные карточки',
+        },
+      );
     });
 };
