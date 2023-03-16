@@ -13,7 +13,7 @@ module.exports.getUsers = (req, res) => {
     });
 };
 
-module.exports.getUserByUserId = (req, res) => {
+module.exports.getUserById = (req, res) => {
   const { userId } = req.params;
 
   Users.findById(userId)
