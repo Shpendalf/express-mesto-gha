@@ -20,7 +20,7 @@ app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
 app.all('*', (req, res) => {
-  res.status(404).send({ message: `Данного адреса не существует` });
+  res.status(404).send({ message: 'Данного адреса не существует' });
 });
 
 mongoose.set('strictQuery', true);
