@@ -53,7 +53,7 @@ exports.likeCard = (req, res) => {
       if (!card) throw new ErrorIsntFound();
       else res.send(card);
     })
-    .catch((err) => {
+    .catch((error) => {
       ErrorHandler(
         error,
         res,
