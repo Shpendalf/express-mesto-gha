@@ -13,10 +13,12 @@ module.exports.getUsers = (req, res) => {
     });
 };
 
-module.exports.getUserById = (req, res) => {
-  Users.findById(req.params.userId)
+module.exports.getUserByUserId = (req, res) => {
+  const { userId } = req.params;
+
+  User.findById(userId)
     .then((user) => {
-      if (!user) throw new ErrorIsntFound();
+      if (user === null) throw new ErrorIsntFound();
       else res.send(user);
     })
     .catch((error) => {
