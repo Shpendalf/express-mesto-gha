@@ -1,7 +1,7 @@
 const ErrorIsntFound = require('../errors/ErrorIsntFound');
 const ValidationError = require('../errors/ValidationError');
 const OtherError = require('../errors/OtherError');
-
+// Обработчик ошибок д
 module.exports.ErrorHandler = (error, res, { foundMsg, valMsg, OtherMsg }) => {
   if (error.name === 'NotFoundError') {
     const customError = new ErrorIsntFound(foundMsg);
