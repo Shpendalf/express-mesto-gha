@@ -3,7 +3,7 @@ const ValidationError = require('../errors/ValidationError');
 const OtherError = require('../errors/OtherError');
 // Обработчик ошибок д
 module.exports.ErrorHandler = (error, res, { foundMsg, valMsg, OtherMsg }) => {
-  if (error.name === 'NotFoundError') {
+  if (error.name === 'ErrorIsntFound') {
     const customError = new ErrorIsntFound(foundMsg);
     res.status(customError.statusCode).send({ message: customError.message });
   } else if (error.name === 'ValidationError' || error.name === 'CastError') {
