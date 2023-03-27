@@ -6,19 +6,21 @@ const AuthorisationError = require('../errors/AuthorisationError');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    // required: true,
     minLength: 2,
     maxLength: 30,
+    default: 'Губка боб',
   },
   about: {
     type: String,
     minLength: 2,
     maxLength: 30,
-    required: true,
+    // required: true,
+    default: 'Живет на дне океана',
   },
   avatar: {
     type: String,
-    required: true,
+    // required: true,
     validate: {
       validator: (value) => validator.isURL(value),
       message: 'Введенные данные не являются ссылкой',
