@@ -3,9 +3,15 @@
   "version": "1.0.0",
   "description": "[![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)\r # Проект Mesto фронтенд + бэкенд",
   "dependencies": {
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
+    "celebrate": "^15.0.1",
+    "cookie-parser": "^1.4.6",
+    "cookieparser": "^0.1.0",
     "editorconfig": "^1.0.2",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.1",
     "validator": "^13.9.0"
   },
