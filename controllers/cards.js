@@ -26,7 +26,13 @@ exports.deleteCard = (req, res, next) => {
     .orFail(new ErrorIsntFound('Карточка не найдена'))
     .then((card) => {
       if (card.owner.toString() === uId) {
-        Cards.findByIdAndRemove(req.params.cardId).then((delition) => res.send(delition));
+        Cards.findByIdAndRemove(req.params.cardId).then((delition) => res.send(delition)).catch((error) => {
+          if (Error.name === 'CastError') {
+            next(
+              new ValidationError('Переданы неверные данные карточки'),
+            );
+          } else next(error);
+        });
       } else throw new ForbiddenError('Карточка создана другим пользователем');
     })
     .catch((error) => {
